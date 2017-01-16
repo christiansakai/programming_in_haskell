@@ -15,3 +15,4 @@ Todo:
   * 6
   * 7
   * 8
+* Part 9 Exercises
