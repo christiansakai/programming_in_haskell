@@ -16,3 +16,8 @@ Todo:
   * 7
   * 8
 * Part 9 Exercises
+* Part 10 Exercises:
+  * 2
+  * 3
+  * 5
+  * 6
