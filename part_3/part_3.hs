@@ -1,10 +1,12 @@
 -- Code
+-- 3.5 Function types
 add :: (Int, Int) -> Int
 add (x, y) = x + y
 
 zeroto :: Int -> [Int]
 zeroto n = [0..n]
 
+-- 3.6 Curried functions
 add' :: Int -> (Int -> Int)
 add' x y = x + y
 
@@ -35,13 +37,13 @@ second xs = head (tail xs)
 swap :: (a, b) -> (b, a)
 swap (x, y) = (y, x)
 
-pair :: a-> b -> (a, b)
+pair :: a -> b -> (a, b)
 pair x y = (x, y)
 
-double :: Num a => a -> a
+double :: (Num a) => a -> a
 double x = x * 2
 
-palindrome :: Eq a => [a] -> Bool
+palindrome :: (Eq a) => [a] -> Bool
 palindrome xs = reverse xs == xs
 
 twice :: (a -> a) -> a -> a
