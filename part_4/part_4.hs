@@ -1,13 +1,15 @@
 -- Code
-even :: Integral a => a -> Bool
+-- 4.1 New from old
+even :: (Integral a) => a -> Bool
 even n = n `mod` 2 == 0
 
 splitAt :: Int -> [a] -> ([a], [a])
 splitAt n xs = (take n xs, drop n xs)
 
-recip :: Fractional a => a -> a
+recip :: (Fractional a) => a -> a
 recip n = 1 / n
 
+-- 4.2 Conditional expressions
 abs :: Int -> Int
 abs n = if n >= 0 then n else (-n)
 
@@ -19,6 +21,7 @@ signum n = if n < 0
                    then 0
                    else 1
 
+-- 4.4 Pattern matching
 not' :: Bool -> Bool
 not' False = True
 not' True  = False
@@ -35,6 +38,7 @@ head' (x:_) = x
 tail' :: [a] -> [a]
 tail' (_:xs) = xs
 
+-- 4.5 Lambda expressions
 add :: Int -> Int -> Int
 add = \x -> (\y -> x + y)
 
