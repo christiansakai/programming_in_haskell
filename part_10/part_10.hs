@@ -2,6 +2,7 @@ import System.IO
 import Data.Char
 
 -- Code
+-- 10.4 Sequencing
 act :: IO (Char, Char)
 act = do
   x <- getChar
@@ -9,6 +10,7 @@ act = do
   y <- getChar
   return (x, y)
 
+-- 10.5 Derived primitives
 getLine' :: IO String
 getLine' = do
   x <- getChar
@@ -38,7 +40,7 @@ strlen = do
   putStr (show (length xs))
   putStrLn " characters"
 
--- Hangman
+-- 10.6 Hangman
 hangman :: IO ()
 hangman = do 
   putStrLn "Think of a word:"
@@ -77,7 +79,7 @@ playHangman word = do
 match :: String -> String -> String
 match xs ys = [if elem x ys then x else '-' | x <- xs]
 
--- Nim
+-- 10.7 Nim
 next :: Int -> Int
 next 1 = 2
 next 2 = 1
@@ -151,7 +153,7 @@ playBoard board player = do
 nim :: IO ()
 nim = playBoard initial 1
 
--- Life
+-- 10.8 Life
 cls :: IO ()
 cls = putStr "\ESC[2J"
 

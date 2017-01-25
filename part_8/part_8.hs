@@ -1,4 +1,5 @@
 -- Code
+-- 8.1 Type declarations
 type Pos        = (Int, Int)
 type Trans      = Pos -> Pos
 type Pair a     = (a, a)
@@ -7,6 +8,7 @@ type Assoc k v  = [(k, v)]
 find' :: Eq k => k -> Assoc k v -> v
 find' k t = head [v | (k', v) <- t, k == k']
 
+-- 8.2 Data declarations
 data Move = North | South | East | West
 
 move :: Move -> Pos -> Pos
@@ -42,6 +44,7 @@ safehead :: [a] -> Maybe a
 safehead []   = Nothing
 safehead xs   = Just (head xs)
 
+-- 8.4 Recursive types
 data Nat = Zero | Succ Nat
 
 nat2int :: Nat -> Int
@@ -83,7 +86,7 @@ occurs' x (Node l y r)
   | x < y               = occurs x l
   | otherwise           = occurs x r
 
--- Tautology Checker
+-- 8.6 Tautology Checker
 data Prop = Const Bool
           | Var Char
           | Not Prop
@@ -104,52 +107,57 @@ p4 = Imply (And (Var 'A') (Imply (Var 'A') (Var 'B'))) (Var 'B')
 
 type Subst = Assoc Char Bool
 
--- find :: (Eq a, Bool b) => a -> Subst -> b
--- find x (Assoc a b) = b
+find :: Char -> Subst -> Bool
+find x' (x:xs)
+  | x' == fst x = snd x
+  | otherwise   = find x' xs
 
--- eval :: Subst -> Prop -> Bool
--- eval _ (Const b)    = b
--- eval s (Var x)      = find x s
--- eval s (Not p)      = not (eval s p)
--- eval s (And p q)    = eval s p && eval s q
--- eval s (Imply p q)  = eval s p <= eval s q
+eval :: Subst -> Prop -> Bool
+eval _ (Const b)    = b
+eval s (Var x)      = find x s
+eval s (Not p)      = not (eval s p)
+eval s (And p q)    = eval s p && eval s q
+eval s (Imply p q)  = eval s p <= eval s q
 
--- vars :: Prop -> [Char]
--- vars (Const _)    = []
--- vars (Var x)      = [x]
--- vars (Not p)      = vars p
--- vars (And p q)    = vars p ++ vars q
--- vars (Imply p q)  = vars p ++ vars q
+vars :: Prop -> [Char]
+vars (Const _)    = []
+vars (Var x)      = [x]
+vars (Not p)      = vars p
+vars (And p q)    = vars p ++ vars q
+vars (Imply p q)  = vars p ++ vars q
 
--- bools :: Int -> [[Bool]]
--- bools 0 = [[]]
--- bools n = map (False:) bss ++ map (True:) bss
---           where bss = bools (n - 1)
+bools :: Int -> [[Bool]]
+bools 0 = [[]]
+bools n = map (False:) bss ++ map (True:) bss
+          where bss = bools (n - 1)
 
--- rmdups :: Eq a => [a] -> [a]
--- rmdups []     = []
--- rmdups (x:xs) = x : filter (/= x) (rmdups xs)
+rmdups :: Eq a => [a] -> [a]
+rmdups []     = []
+rmdups (x:xs) = x : filter (/= x) (rmdups xs)
 
--- substs :: Prop -> [Subst]
--- substs p = map (zip vs) (bools (length vs))
---            where vs = rmdups (vars p)
+substs :: Prop -> [Subst]
+substs p = map (zip vs) (bools (length vs))
+           where vs = rmdups (vars p)
 
--- Abstract Machine
+isTaut :: Prop -> Bool
+isTaut p = and [eval s p | s <- substs p]
+
+-- 8.7 Abstract Machine
 data Expr = Val Int | Add Expr Expr
 
+eval' :: Expr -> Cont -> Int
+eval' (Val n)   c = exec c n
+eval' (Add x y) c = eval' x (EVAL y : c)
+
 value :: Expr -> Int
-value e = eval e []
+value e = eval' e []
 
 data Op = EVAL Expr | ADD Int
 type Cont = [Op]
 
-eval :: Expr -> Cont -> Int
-eval (Val n)   c = exec c n
-eval (Add x y) c = eval x (EVAL y : c)
-
 exec :: Cont -> Int -> Int
 exec []           n = n
-exec (EVAL y : c) n = eval y (ADD n : c)
+exec (EVAL y : c) n = eval' y (ADD n : c)
 exec (ADD n : c)  m = exec c (n + m)
 
 -- Exercises
@@ -193,10 +201,23 @@ balance xs      = Nodee (balance left) (balance right)
                   where (left, right) = halve xs
 
 -- No. 5
+data Expr2 = Val2 Int | Add2 Expr2 Expr2
+
+folde :: (Int -> a) -> (a -> a -> a) -> Expr2 -> a
+folde f g (Val2 x)         = f x
+folde f g (Add2 exp1 exp2) = g (folde f g exp1) (folde f g exp2)
 
 -- No. 6
+eval'' :: Expr2 -> Int
+eval'' exp = folde (\x -> x) (\x y -> x + y) exp
 
 -- No. 7
+data MyMaybe a = MyNothing | MyJust a
+
+instance Eq a => Eq (MyMaybe a) where
+  -- (==) :: a -> a -> Bool
+  MyNothing == MyNothing = True
+  MyJust a == MyJust b   = a == b
+  _ == _                 = False
 
 -- No. 8
-

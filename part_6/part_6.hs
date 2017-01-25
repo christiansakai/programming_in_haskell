@@ -1,7 +1,10 @@
+-- Code
+-- 6.1 Basic concepts
 fac :: Int -> Int
 fac 0 = 1
 fac n = n * fac (n - 1)
 
+-- 6.2 Recursion on lists
 product' :: Num a => [a] -> a
 product' []       = 1
 product' (n:ns)   = n * product' ns
@@ -24,6 +27,7 @@ isort :: Ord a => [a] -> [a]
 isort []        = []
 isort (x:xs)    = insert x (isort xs)
 
+-- 6.3 Multiple arguments
 zip' :: [a] -> [b] -> [(a, b)]
 zip'  []      _       = []
 zip'  _       []      = []
@@ -34,6 +38,7 @@ drop' 0 xs      = xs
 drop' _ []      = []
 drop' n (_:xs)  = drop (n - 1) xs
 
+-- 6.4 Multiple recursion
 fib :: Int -> Int
 fib 0 = 0
 fib 1 = 1
@@ -46,6 +51,7 @@ qsort (x:xs)  = qsort smaller ++ [x] ++ qsort larger
                   smaller = [a | a <- xs, a <= x]
                   larger  = [b | b <- xs, b > x]
 
+-- 6.5 Mutual recursion
 even' :: Int -> Bool
 even' 0 = True
 even' n = odd' (n - 1)
@@ -140,6 +146,3 @@ take' n (x:xs)  = x : take' (n - 1) xs
 last' :: [a] -> a
 last' [x]     = x
 last' (x:xs)  = last' xs
-
-
-

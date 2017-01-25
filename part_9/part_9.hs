@@ -1,4 +1,5 @@
 -- Code
+-- 9.2 Arithmetic operators
 data Op = Add | Sub | Mul | Div
 
 instance Show Op where
@@ -19,6 +20,7 @@ apply Sub x y = x - y
 apply Mul x y = x * y
 apply Div x y = x `div` y
 
+-- 9.3 Numeric expressions
 data Expr = Val Int | App Op Expr Expr
 
 instance Show Expr where
@@ -38,6 +40,7 @@ eval (App o l r)  = [apply o x y | x <- eval l,
                                    y <- eval r,
                                    valid o x y]
 
+-- 9.4 Combinatorial functions
 subs :: [a] -> [[a]]
 subs []     = [[]]
 subs (x:xs) = yss ++ map (x:) yss
@@ -54,12 +57,13 @@ perms (x:xs)  = concat (map (interleave x) (perms xs))
 choices :: [a] -> [[a]]
 choices = concat . map perms . subs
 
+-- 9.5 Formalising the problem
 solution :: Expr -> [Int] -> Int -> Bool
 solution e ns n = 
   elem (values e) (choices ns)
   && eval e == [n]
 
--- Brute Force
+-- 9.6 Brute force solution
 split :: [a] -> [([a], [a])]
 split []      = []
 split [_]     = []
@@ -84,6 +88,7 @@ solutions ns n =
   [e | ns' <- choices ns, e <- exprs ns', 
                           eval e == [n]]
 
+-- 9.8 Combining generation and evaluation
 type Result = (Expr, Int)
 
 results :: [Int] -> [Result]
@@ -99,6 +104,7 @@ combine' (l, x) (r, y) =
   [(App o l r, apply o x y) | o <- ops,
                               valid o x y]
 
+-- 9.9 Exploiting algebraic properties
 solutions' :: [Int] -> Int -> [Expr]
 solutions' ns n = 
   [e | ns' <- choices ns,

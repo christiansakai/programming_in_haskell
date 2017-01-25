@@ -2,12 +2,14 @@ import Data.Char
 import Data.List
 
 -- Code
+-- 7.1 Basic concepts
 add' :: Int -> (Int -> Int)
 add' = \x -> (\y -> x + y)
 
 twice' :: (a -> a) -> a -> a
 twice' f x = f (f x)
 
+-- 7.2 Processing lists
 map' :: (a -> b) -> [a] -> [b]
 map' f xs = [f x | x <- xs]
 
@@ -27,6 +29,7 @@ filter'' p (x:xs)
 sumsqreven :: [Int] -> Int
 sumsqreven ns = sum (map (^2) (filter even ns))
 
+-- 7.3 The foldr function
 sum' :: Num a => [a] -> a
 sum' []     = 0
 sum' (x:xs) = x + sum' xs
@@ -86,6 +89,7 @@ sum''' = sum' 0
           sum' v []     = v
           sum' v (x:xs) = sum' (v + x) xs
 
+-- 7.4 The foldl function
 sum'''' :: Num a => [a] -> a
 sum'''' = foldl (+) 0
 
@@ -108,6 +112,7 @@ foldl' :: (a -> b -> a) -> a -> [b] -> a
 foldl' f v []      = v
 foldl' f v (x:xs)  = foldl f (f v x) xs
 
+-- 7.5 The composition operator
 odd' :: Int -> Bool
 odd' = not . even
 
@@ -123,7 +128,7 @@ id' = \x -> x
 compose' :: [a -> a] -> (a -> a)
 compose' = foldr (.) id
 
--- Binary String Transmitter
+-- 7.6 Binary String Transmitter
 type Bit = Int
 
 bin2int :: [Bit] -> Int
@@ -152,7 +157,7 @@ transmit = decode . channel . encode
 channel :: [Bit] -> [Bit]
 channel = id
 
--- Voting algorithms
+-- 7.7 Voting algorithms
 votes :: [String]
 votes = ["Red", "Blue", "Green", "Blue", "Blue", "Red"]
 
@@ -221,6 +226,10 @@ map''' f = foldr (\x xs -> f x : xs) []
 filter''' :: (a -> Bool) -> [a] -> [a]
 filter''' p = foldr (\x xs -> if p x then x:xs else xs) []
 
+-- No. 4
+dec2int :: [Int] -> Int
+dec2int = foldl (\acc x -> acc * 10 + x) 0
+
 -- No. 5
 curry :: ((a, b) -> c) -> (a -> b -> c)
 curry f = \x y -> f (x, y)
@@ -250,4 +259,18 @@ int2bin' = unfold (== 0) (`mod` 2) (`div` 2)
 -- map''' :: (a -> b) -> [a] -> [b]
 -- map''' f = foldr (\x xs -> f x : xs) []
 
+-- No. 9
+altMap :: (Int -> Int) -> (Int -> Int) -> [Int] -> [Int]
+altMap f g (x:[])     = (f x):[]
+altMap f g (x:x':[])  = (f x):(g x'):[]
+altMap f g (x:x':xs)  = (f x):(g x'):(altMap f g xs)
 
+-- No. 10
+-- luhnDouble :: Int -> Int
+-- luhnDouble x
+--   | result > 9 = result - 9
+--   | otherwise  = result
+--   where result = x * 2
+
+-- luhn :: Int -> Int -> Int -> Int -> Bool
+-- luhn a b c d = ((luhnDouble a + b + luhnDouble c + d) `mod` 10) == 0
