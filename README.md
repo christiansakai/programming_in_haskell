@@ -14,6 +14,12 @@ Todo:
 * Part 10 Exercises:
   * 2
   * 3
-  * 5
   * 6
 * Part 11 Exercises
+* Part 12 Exercises:
+  * 2
+  * 3
+  * 5
+  * 6
+  * 7
+  * 8

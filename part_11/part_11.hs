@@ -2,6 +2,8 @@ import Data.Char
 import Data.List
 import System.IO
 
+-- Code
+-- 11.2 Basic declarations
 size :: Int
 size = 3
 
@@ -16,6 +18,7 @@ next O = X
 next B = B
 next X = O
 
+-- 11.3 Grid utilities
 empty :: Grid
 empty = replicate size (replicate size B)
 
@@ -44,6 +47,7 @@ diag g = [g !! n !! n | n <- [0..size - 1]]
 won :: Grid -> Bool
 won g = wins O g || wins X g
 
+-- 11.4 Displaying grid
 putGrid :: Grid -> IO ()
 putGrid =
   putStrLn . unlines . concat . interleave bar . map showRow
@@ -65,6 +69,7 @@ interleave x []     = []
 interleave x [y]    = [y]
 interleave x (y:ys) = y : x : interleave x ys
 
+-- 11.5 Making a move
 valid :: Grid -> Int -> Bool
 valid g i = i <= i &&
             i < size^2 &&
@@ -79,6 +84,7 @@ chop :: Int -> [a] -> [[a]]
 chop n [] = []
 chop n xs = take n xs : chop n (drop n xs)
 
+-- 11.6 Readinga number
 getNat :: String -> IO Int
 getNat prompt = do
   putStr prompt
@@ -89,6 +95,7 @@ getNat prompt = do
     putStrLn "ERROR: Invalid number"
     getNat prompt
 
+-- 11.7 Human vs human
 tictactoe :: IO ()
 tictactoe = run empty O
 
@@ -120,6 +127,7 @@ run' g p
 prompt :: Player -> String
 prompt p = "Player " ++ show p ++ ", enter your move: "
 
+-- 11.8 Game trees
 data Tree a = Node a [Tree a]
               deriving Show
 
@@ -132,6 +140,7 @@ moves g p
   | full g      = []
   | otherwise   = concat [move g i p | i <- [0..((size^2)-1)]]
 
+-- 11.9 Pruning the tree
 prune :: Int -> Tree a -> Tree a
 prune 0 (Node x _)  = Node x []
 prune n (Node x ts) = Node x [prune (n - 1) t | t <- ts]
@@ -139,6 +148,7 @@ prune n (Node x ts) = Node x [prune (n - 1) t | t <- ts]
 depth :: Int
 depth = 9
 
+-- 11.10 Minimax algorithm
 minimax :: Tree Grid -> Tree (Grid, Player)
 minimax (Node g [])
   | wins O g  = Node (g, O) []
@@ -157,6 +167,7 @@ bestmove g p = head [g' | Node (g', p') _ <- ts, p' == best]
                  tree = prune depth (gametree g p)
                  Node (_, best) ts = minimax tree
         
+-- 11.11 Human vs computer
 main :: IO ()
 main = do
   hSetBuffering stdout NoBuffering

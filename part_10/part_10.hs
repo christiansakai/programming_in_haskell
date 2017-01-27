@@ -249,5 +249,24 @@ adder = do
   doAdder 0 (read totalIteration :: Int) 0
 
 -- No. 5
+adder' :: IO ()
+adder' = do
+  putStr "How many numbers? "
+  totalIteration <- getLine
+  let totalIterationInt = read totalIteration :: Int
+  numbers <- sequence [getLine | _ <- [1..totalIterationInt]]
+  let sum = foldl (\acc x -> acc + (read x :: Int)) 0 numbers
+  putStrLn ("The total is " ++ show sum)
 
 -- No. 6
+-- readLine :: IO String
+-- readLine = do
+--   x <- getChar
+--   case x of
+--     '\n'      -> return []
+--     '\DEL'    -> do
+--       putStr "retardation"
+--       readLine
+--     _         -> do
+--       xs <- getLine'
+--       return (x:xs)
